@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "33013527862",
+    "project_id": "ideas4life-2752c",
+    "storage_bucket": "ideas4life-2752c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33013527862:android:86f253a2706f2a6683ef97",
+        "android_client_info": {
+          "package_name": "h.ideas4life"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhp8Qegeo-XJAAY5frC0_fsRcqzFDwfHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
