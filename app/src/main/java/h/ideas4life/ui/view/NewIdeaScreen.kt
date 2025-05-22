@@ -190,12 +190,6 @@ fun NewIdeaScreen(viewModel: IdeaViewModel) {
             }
         }
 
-        if (aiResponse.isNotEmpty()) {
-            Spacer(Modifier.height(12.dp))
-            Text("Respuesta IA:", fontSize = 16.sp)
-            Text(aiResponse, fontSize = 14.sp)
-        }
-
         Column {
             // Mostrar respuesta
             Text(

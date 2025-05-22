@@ -1,11 +1,17 @@
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
-
+    kotlin("plugin.serialization") version "2.1.21"
 }
-
+android.buildFeatures.buildConfig = true
+val localProperties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
+val openAiApiKey = localProperties["OPENAI_API_KEY"] as String
+val prompt = localProperties["PROMPT"] as String
 android {
     namespace = "h.ideas4life"
     compileSdk = 35
@@ -16,11 +22,22 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
+        buildConfigField("String", "PROMPT", "\"$prompt\"")
     }
 
     buildTypes {
+        getByName("debug") {
+            buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
+            buildConfigField("String", "PROMPT", "\"$prompt\"")
+        }
+        getByName("release") {
+            buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
+            buildConfigField("String", "PROMPT", "\"$prompt\"")
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -39,6 +56,8 @@ android {
     buildFeatures {
         compose = true
     }
+
+
 }
 
 dependencies {

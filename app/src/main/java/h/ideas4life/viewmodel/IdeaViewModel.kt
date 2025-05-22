@@ -1,12 +1,11 @@
 package h.ideas4life.viewmodel
 
-import androidx.annotation.OptIn
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.util.Log
-import androidx.media3.common.util.UnstableApi
-import h.ideas4life.data.local.dto.ChatRequest
+import h.ideas4life.BuildConfig
 import h.ideas4life.data.local.dto.ChatMessage
+import h.ideas4life.data.local.dto.ChatRequest
 import h.ideas4life.data.remote.model.IdeaModel
 import h.ideas4life.data.remote.network.OpenAiClient
 import h.ideas4life.data.remote.repository.IdeaRepository
@@ -17,6 +16,7 @@ import kotlinx.coroutines.launch
 class IdeaViewModel(
     private val repository: IdeaRepository
 ) : ViewModel() {
+    private val PROMT = BuildConfig.PROMPT
 
     private val _ideas = MutableStateFlow<List<IdeaModel>>(emptyList())
     val ideas: StateFlow<List<IdeaModel>> = _ideas
@@ -35,20 +35,16 @@ class IdeaViewModel(
         }
     }
 
-    @OptIn(UnstableApi::class)
     fun askAi(idea: String) {
         viewModelScope.launch {
             try {
+                val  prompt = PROMT + idea
                 val request = ChatRequest(
-                    messages = listOf(ChatMessage(role = "user", content = idea))
+                    model = "gpt-3.5-turbo",
+                    messages = listOf(ChatMessage(role = "user", content = prompt))
                 )
-
-                Log.d("OPENAI", "Enviando request: $request")
-
                 val response = OpenAiClient.api.chatCompletion(request)
-
-                Log.d("OPENAI", "Respuesta completa: $response")
-
+                Log.e("OPENAI", "HttpException: $response")
                 val reply = response.choices.firstOrNull()?.message?.content ?: "Sin respuesta"
                 _aiResponse.value = reply
 
@@ -67,7 +63,6 @@ class IdeaViewModel(
         _isAddIdeaVisible.value = !_isAddIdeaVisible.value
     }
 
-    @OptIn(UnstableApi::class)
     fun saveIdea(text: String) {
         val idea = IdeaModel(
             original = text,
