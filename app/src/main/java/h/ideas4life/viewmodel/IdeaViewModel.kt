@@ -3,6 +3,7 @@ package h.ideas4life.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import h.ideas4life.BuildConfig
 import h.ideas4life.data.local.dto.ChatMessage
 import h.ideas4life.data.local.dto.ChatRequest
@@ -12,8 +13,9 @@ import h.ideas4life.data.remote.repository.IdeaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-
-class IdeaViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class IdeaViewModel @Inject constructor(
     private val repository: IdeaRepository
 ) : ViewModel() {
     private val PROMT = BuildConfig.PROMPT

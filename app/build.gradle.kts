@@ -4,7 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+    kotlin("kapt")
     kotlin("plugin.serialization") version "2.1.21"
+    id("com.google.dagger.hilt.android")
 }
 android.buildFeatures.buildConfig = true
 val localProperties = Properties().apply {
@@ -13,9 +15,15 @@ val localProperties = Properties().apply {
 val openAiApiKey = localProperties["OPENAI_API_KEY"] as String
 val prompt = localProperties["PROMPT"] as String
 android {
+
     namespace = "h.ideas4life"
     compileSdk = 35
 
+    packaging {
+        resources {
+            excludes += "/META-INF/gradle/incremental.annotation.processors"
+        }
+    }
     defaultConfig {
         applicationId = "h.ideas4life"
         minSdk = 24
@@ -25,6 +33,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
         buildConfigField("String", "PROMPT", "\"$prompt\"")
+
+    }
+
+    configurations.implementation {
+        exclude(group = "com.intellij", module = "annotations")
     }
 
     buildTypes {
@@ -81,6 +94,13 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.compiler)
+    kapt(libs.hilt.android.compiler)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

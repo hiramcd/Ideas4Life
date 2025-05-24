@@ -49,11 +49,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import h.ideas4life.viewmodel.IdeaViewModel
 import java.util.Locale
 
 @Composable
-fun NewIdeaScreen(viewModel: IdeaViewModel) {
+fun NewIdeaScreen(viewModel: IdeaViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val maxRecordingDurationMillis = 10_000L
     val speechRecognizer = remember {

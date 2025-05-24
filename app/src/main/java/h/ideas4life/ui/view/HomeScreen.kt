@@ -18,11 +18,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lint.kotlin.metadata.Visibility
+import dagger.hilt.android.lifecycle.HiltViewModel
 import h.ideas4life.viewmodel.IdeaViewModel
 
 @Composable
-fun HomeScreen(viewModel: IdeaViewModel) {
+fun HomeScreen() {
+    val viewModel: IdeaViewModel = hiltViewModel()
     val isAddVisible by viewModel.isAddIdeaVisible.collectAsState()
 
     Scaffold(

@@ -7,34 +7,29 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.internal.composableLambda
-import androidx.navigation.NavType
+import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import dagger.hilt.android.AndroidEntryPoint
 import h.ideas4life.data.remote.repository.IdeaRepository
-import h.ideas4life.data.remote.services.FirestoreService
+import h.ideas4life.data.remote.services.IdeaServiceImpl
 import h.ideas4life.ui.navigation.Routes
 import h.ideas4life.ui.theme.Ideas4LifeTheme
 import h.ideas4life.ui.view.HomeScreen
-import h.ideas4life.ui.view.IdeaScreen
-import h.ideas4life.ui.view.NewIdeaScreen
 import h.ideas4life.viewmodel.IdeaViewModel
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var permissionManager: PermissionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
-        val firestoreService = FirestoreService()
-        val repository = IdeaRepository(firestoreService)
-        val viewModel = IdeaViewModel(repository)
         permissionManager = PermissionManager(this)
 
         if (!permissionManager.hasAudioPermission()) {
@@ -42,14 +37,17 @@ class MainActivity : ComponentActivity() {
         }
         enableEdgeToEdge()
         setContent {
-            Ideas4LifeTheme {
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Routes.Home){
-                    composable(Routes.Home) {
-                        HomeScreen(
-                            viewModel = viewModel
-                        )
-                    }
+            AppContent()
+        }
+    }
+
+@Composable
+    fun AppContent(){
+        Ideas4LifeTheme {
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = Routes.Home){
+                composable(Routes.Home) {
+                    HomeScreen()
                 }
             }
         }

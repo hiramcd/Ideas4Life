@@ -21,11 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import h.ideas4life.viewmodel.IdeaViewModel
 
 
 @Composable
-fun IdeaScreen(viewModel: IdeaViewModel) {
+fun IdeaScreen(viewModel: IdeaViewModel = hiltViewModel()) {
     val ideas by viewModel.ideas.collectAsState()
     val isAddVisible by viewModel.isAddIdeaVisible.collectAsState()
     var newIdeaText by remember { mutableStateOf("") }

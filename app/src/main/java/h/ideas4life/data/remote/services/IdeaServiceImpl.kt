@@ -7,11 +7,12 @@ import h.ideas4life.data.remote.model.IdeaModel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import javax.inject.Inject
 
-class FirestoreService {
+class IdeaServiceImpl @Inject constructor() : IdeaService {
     private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun getIdeasFlow(): Flow<List<IdeaModel>> = callbackFlow {
+    override fun getIdeasFlow(): Flow<List<IdeaModel>> = callbackFlow {
         val subscription = db.collection("ideas")
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
@@ -30,7 +31,7 @@ class FirestoreService {
         awaitClose { subscription.remove() }
     }
 
-    fun saveIdea(idea: IdeaModel, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+    override fun saveIdea(idea: IdeaModel, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         val dto = idea.toWriteDto()
         db.collection("ideas")
             .add(dto)
